@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useState } from 'react';
+import { TaskContext } from './context/TaskContext';
+import Login from './components/Login';
+import Register from './components/Register';
+import TaskList from './components/TaskList';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const { user, logout } = useContext(TaskContext);
+    const [showRegister, setShowRegister] = useState(false);
+
+    const handleRegistrationSuccess = () => {
+        setShowRegister(false);
+    };
+
+    return (
+        <div className="container">
+            {user ? (
+                <>
+                    <header>
+                        <h1>Welcome, {user}</h1>
+                        <button onClick={logout}>Logout</button>
+                    </header>
+                    <TaskList />
+                </>
+            ) : (
+                <>
+                    {showRegister ? (
+                        <Register onRegisterSuccess={handleRegistrationSuccess} />
+                    ) : (
+                        <Login />
+                    )}
+                    <button onClick={() => setShowRegister(!showRegister)}>
+                        {showRegister ? 'Back to Login' : 'Register'}
+                    </button>
+                </>
+            )}
+        </div>
+    );
+};
 
 export default App;
